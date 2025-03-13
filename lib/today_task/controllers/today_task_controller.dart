@@ -43,6 +43,11 @@ class TodayTaskController extends GetxController{
     getAll();
   }
 
+  void updateTask(String title,int id) async {
+    await service.updateTask(title, id);
+    getAll();
+  }
+
   void toggleTask(bool isDone,int id) async{
     service.toggleTask(isDone, id);
     getAll();

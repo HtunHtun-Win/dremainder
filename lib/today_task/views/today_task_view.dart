@@ -14,6 +14,7 @@ class TodayTaskView extends StatefulWidget {
 class _TodayTaskViewState extends State<TodayTaskView> {
   TodayTaskController controller = Get.put(TodayTaskController());
   TextEditingController titleController = TextEditingController();
+  TextEditingController updateController = TextEditingController();
 
   @override
   void initState() {
@@ -35,12 +36,18 @@ class _TodayTaskViewState extends State<TodayTaskView> {
         // centerTitle: true,
         backgroundColor: Colors.amber,
         actions: [
-          IconButton(onPressed: () {
-          controller.refreshTest();
-          }, icon: Icon(Icons.refresh)),
-          IconButton(onPressed: () {
-          Get.to(() => AllTaskView());
-          }, icon: Icon(Icons.menu)),
+          IconButton(
+            onPressed: () {
+              controller.refreshTest();
+            },
+            icon: Icon(Icons.refresh),
+          ),
+          IconButton(
+            onPressed: () {
+              Get.to(() => AllTaskView());
+            },
+            icon: Icon(Icons.menu),
+          ),
         ],
       ),
       body: Column(
@@ -99,20 +106,70 @@ class _TodayTaskViewState extends State<TodayTaskView> {
                         setState(() {});
                       },
                     ),
-                    title: Text(
-                      task.title,
-                      style: TextStyle(
-                        decoration:
-                            task.isDone
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
-                      ),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          task.title,
+                          style: TextStyle(
+                            decoration:
+                                task.isDone
+                                    ? TextDecoration.lineThrough
+                                    : TextDecoration.none,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            updateController.text = task.title;
+                            Get.defaultDialog(
+                              title: "Edit Task",
+                              content: TextField(
+                                controller: updateController,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text("Cancel"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    controller.updateTask(updateController.text, task.id!);
+                                    Get.back();
+                                  },
+                                  child: Text("Save"),
+                                ),
+                              ],
+                            );
+                          },
+                          icon: Icon(Icons.edit),
+                        ),
+                      ],
                     ),
                     trailing: IconButton(
                       onPressed: () {
-                        controller.remove(task);
+                        Get.defaultDialog(
+                          title: "Remove Task!",
+                          content: Text("Confirm remove task."),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("No"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                controller.remove(task);
+                                Get.back();
+                              },
+                              child: Text("Yes"),
+                            ),
+                          ],
+                        );
                       },
-                      icon: Icon(Icons.delete),
+                      icon: Icon(Icons.delete, color: Colors.red),
                     ),
                   );
                 },

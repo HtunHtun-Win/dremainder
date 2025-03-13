@@ -15,6 +15,10 @@ class TodayTaskService {
     await repo.add(row.toMap());
   }
 
+  Future<void> updateTask(String title,int id) async {
+    await repo.updateTask(title, id);
+  }
+
   Future<void> toggleTask(bool isDone,int id) async {
     await repo.toggleTask(isDone ? 1 : 0, id);
   }

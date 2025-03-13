@@ -14,6 +14,12 @@ class TodayTaskRepo {
     await database!.insert("ttask", row);
   }
 
+  Future<void> updateTask(String title,int id) async {
+    // print("updating");
+    final database = await dbObj.database;
+    await database!.update("ttask", {"title": title}, where: "id = ?", whereArgs: [id]);
+  }
+
   Future<void> toggleTask(int isDone,int id) async {
     // print("toggle");
     final database = await dbObj.database;
